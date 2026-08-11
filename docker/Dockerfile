@@ -58,7 +58,12 @@ ARG BLOCKSCOUT_GROUP=blockscout
 ARG BLOCKSCOUT_UID=10001
 ARG BLOCKSCOUT_GID=10001
 
-RUN apk --no-cache --update add jq curl && \
+# Patch the OS packages baked into the alpine-3.22.2 base of hexpm/elixir
+# (the tag pins a snapshot, so openssl/libcrypto/libssl/musl/c-ares/nghttp2/zlib
+# ship stale). `apk upgrade` pulls the current patched apk versions from the 3.22
+# branch — clears the base-layer HIGH/CRITICAL CVEs Trivy flags on this image.
+RUN apk --no-cache upgrade && \
+    apk --no-cache --update add jq curl && \
     addgroup --system --gid ${BLOCKSCOUT_GID} ${BLOCKSCOUT_GROUP} && \
     adduser --system --uid ${BLOCKSCOUT_UID} --ingroup ${BLOCKSCOUT_GROUP} --disabled-password --home /app ${BLOCKSCOUT_USER}
 
