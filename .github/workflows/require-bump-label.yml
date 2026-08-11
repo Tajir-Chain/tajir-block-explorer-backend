@@ -1,0 +1,55 @@
+name: Require version-bump label
+
+# Guards the auto-tag pipeline: a devnet PR MINTS the next version from its
+# patch/minor/major label, so merging without one silently skips the release
+# (and a label added *after* merge can't be recovered by a re-run — the merge
+# event payload is fixed). This check fails such a PR up front. Promotion PRs
+# into testnet/mainnet don't use labels, so it passes there automatically.
+#
+# Make it enforce: add "Require version-bump label / require-label" as a
+# required status check in the devnet branch-protection rule.
+
+on:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+    branches:
+      - devnet
+      - testnet
+      - mainnet
+
+permissions:
+  contents: read
+
+jobs:
+  require-label:
+    name: require-label
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for exactly one bump label (devnet only)
+        env:
+          BASE: ${{ github.base_ref }}
+          LABELS: ${{ join(github.event.pull_request.labels.*.name, ' ') }}
+        run: |
+          set -euo pipefail
+          if [ "$BASE" != "devnet" ]; then
+            echo "Base is '$BASE' — promotion tier, no bump label required. ✅"
+            exit 0
+          fi
+
+          count=0
+          for l in patch minor major; do
+            if echo " $LABELS " | grep -qw "$l"; then
+              echo "Found bump label: $l"
+              count=$((count+1))
+            fi
+          done
+
+          if [ "$count" -eq 1 ]; then
+            echo "Exactly one bump label present. ✅"
+          elif [ "$count" -eq 0 ]; then
+            echo "::error::No version-bump label. Add exactly one of: patch, minor, major — a devnet PR mints the next version from it."
+            exit 1
+          else
+            echo "::error::Multiple bump labels ($count). Keep exactly one of: patch, minor, major."
+            exit 1
+          fi
