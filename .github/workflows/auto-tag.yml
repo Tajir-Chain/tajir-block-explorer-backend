@@ -165,7 +165,18 @@ jobs:
           push: false
           load: true
           tags: ${{ steps.version.outputs.image_tags }}
+          # CHAIN_TYPE is COMPILE-time in Blockscout, not runtime: api_router.ex
+          # resolves @chain_type through Utils.CompileTimeEnvHelper, so the
+          # /api/v2/optimism/* routes are compiled IN or OUT of the release.
+          # Omitting it built every tag we ever published as the "default" chain
+          # type, which is why the explorer's Deposits/Withdrawals tabs return
+          # 400 "Unknown API v2 action" on testnet AND mainnet — the chart's
+          # runtime CHAIN_TYPE env can never add those routes back.
+          # (The runtime env DID drive the Optimism indexers, which are gated in
+          # runtime.exs, which is why the op_* tables are already populated.)
+          # Mirrors upstream .github/workflows/release-optimism.yml.
           build-args: |
+            CHAIN_TYPE=optimism
             DECODE_NOT_A_CONTRACT_CALLS=false
             MIXPANEL_URL=
             MIXPANEL_TOKEN=
