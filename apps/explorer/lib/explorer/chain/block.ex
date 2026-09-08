@@ -481,7 +481,7 @@ defmodule Explorer.Chain.Block do
   # - `{denominator, multiplier}` tuple.
   @spec get_eip1559_config(non_neg_integer()) :: {non_neg_integer(), non_neg_integer()}
   defp get_eip1559_config(block_number) do
-    with true <- Application.get_env(:explorer, :chain_type) == :optimism,
+    with true <- Application.get_env(:explorer, :chain_type) in [:optimism, :optimism_agglayer],
          # credo:disable-for-next-line Credo.Check.Design.AliasUsage
          config = Explorer.Chain.Optimism.EIP1559ConfigUpdate.actual_config_for_block(block_number),
          false <- is_nil(config) do

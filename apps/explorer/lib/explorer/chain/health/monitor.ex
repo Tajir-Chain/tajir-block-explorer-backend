@@ -77,7 +77,7 @@ defmodule Explorer.Chain.Health.Monitor do
         :zksync ->
           get_latest_batch_info_from_module(ZkSyncReader)
 
-        :optimism ->
+        chain when chain in [:optimism, :optimism_agglayer] ->
           get_latest_batch_info_from_module(OptimismReader)
 
         :polygon_zkevm ->

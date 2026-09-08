@@ -399,6 +399,16 @@ defmodule Indexer.Block.Realtime.Fetcher do
     Indexer.Fetcher.Optimism.Withdrawal.remove(reorg_block_number)
   end
 
+  defp do_remove_assets_by_number(:optimism_agglayer, reorg_block_number) do
+    # credo:disable-for-lines:6 Credo.Check.Design.AliasUsage
+    Optimism.handle_realtime_l2_reorg(reorg_block_number, Indexer.Fetcher.Optimism.EIP1559ConfigUpdate)
+    Optimism.handle_realtime_l2_reorg(reorg_block_number, Indexer.Fetcher.Optimism.Interop.Message)
+    Optimism.handle_realtime_l2_reorg(reorg_block_number, Indexer.Fetcher.Optimism.Interop.MessageFailed)
+    Indexer.Fetcher.Optimism.TransactionBatch.handle_l2_reorg(reorg_block_number)
+    Indexer.Fetcher.Optimism.Withdrawal.remove(reorg_block_number)
+    Indexer.Fetcher.PolygonZkevm.BridgeL2.reorg_handle(reorg_block_number)
+  end
+
   # Removes all rows from `polygon_zkevm_bridge` table
   # previously written starting from the reorg block number
   defp do_remove_assets_by_number(:polygon_zkevm, reorg_block) do

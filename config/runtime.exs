@@ -382,7 +382,7 @@ config :explorer, Explorer.Chain.Cache.Counters.Rootstock.LockedBTCCount,
   global_ttl: ConfigHelper.parse_time_env_var("ROOTSTOCK_LOCKED_BTC_CACHE_PERIOD", "10m"),
   locking_cap: ConfigHelper.parse_integer_env_var("ROOTSTOCK_LOCKING_CAP", 21_000_000)
 
-config :explorer, Explorer.Chain.Cache.OptimismFinalizationPeriod, enabled: ConfigHelper.chain_type() == :optimism
+config :explorer, Explorer.Chain.Cache.OptimismFinalizationPeriod, enabled: ConfigHelper.chain_type() in [:optimism, :optimism_agglayer]
 
 config :explorer, Explorer.Chain.Cache.Counters.AddressTransactionsGasUsageSum,
   cache_period: ConfigHelper.parse_time_env_var("CACHE_ADDRESS_TRANSACTIONS_GAS_USAGE_COUNTER_PERIOD", "30m")
@@ -412,8 +412,8 @@ config :explorer, Explorer.Chain.Cache.Counters.AddressTokenTransfersCount,
   cache_period: ConfigHelper.parse_time_env_var("CACHE_ADDRESS_TOKEN_TRANSFERS_COUNTER_PERIOD", "1h")
 
 config :explorer, Explorer.Chain.Cache.Counters.Optimism.LastOutputRootSizeCount,
-  enabled: ConfigHelper.chain_type() == :optimism,
-  enable_consolidation: ConfigHelper.chain_type() == :optimism,
+  enabled: ConfigHelper.chain_type() in [:optimism, :optimism_agglayer],
+  enable_consolidation: ConfigHelper.chain_type() in [:optimism, :optimism_agglayer],
   cache_period: ConfigHelper.parse_time_env_var("CACHE_OPTIMISM_LAST_OUTPUT_ROOT_SIZE_COUNTER_PERIOD", "5m")
 
 config :explorer, Explorer.Chain.Cache.Counters.Transactions24hCount,
@@ -815,7 +815,7 @@ config :explorer, Explorer.Migrator.HeavyDbIndexOperation.CreateArbitrumBatchL2B
   enabled: ConfigHelper.chain_type() == :arbitrum
 
 config :explorer, Explorer.Migrator.HeavyDbIndexOperation.CreateTransactionsOperatorFeeConstantIndex,
-  enabled: ConfigHelper.chain_type() == :optimism
+  enabled: ConfigHelper.chain_type() in [:optimism, :optimism_agglayer]
 
 config :explorer, Explorer.Migrator.FilecoinPendingAddressOperations,
   enabled: ConfigHelper.chain_type() == :filecoin,
@@ -1272,27 +1272,27 @@ config :indexer, Indexer.Fetcher.MultichainSearchDb.CountersExportQueue,
 config :indexer, Indexer.Fetcher.SignedAuthorizationStatus,
   batch_size: ConfigHelper.parse_integer_env_var("INDEXER_SIGNED_AUTHORIZATION_STATUS_BATCH_SIZE", 10)
 
-config :indexer, Indexer.Fetcher.Optimism.TransactionBatch.Supervisor, enabled: ConfigHelper.chain_type() == :optimism
-config :indexer, Indexer.Fetcher.Optimism.OutputRoot.Supervisor, enabled: ConfigHelper.chain_type() == :optimism
-config :indexer, Indexer.Fetcher.Optimism.DisputeGame.Supervisor, enabled: ConfigHelper.chain_type() == :optimism
+config :indexer, Indexer.Fetcher.Optimism.TransactionBatch.Supervisor, enabled: ConfigHelper.chain_type() in [:optimism, :optimism_agglayer]
+config :indexer, Indexer.Fetcher.Optimism.OutputRoot.Supervisor, enabled: ConfigHelper.chain_type() in [:optimism, :optimism_agglayer]
+config :indexer, Indexer.Fetcher.Optimism.DisputeGame.Supervisor, enabled: ConfigHelper.chain_type() in [:optimism, :optimism_agglayer]
 config :indexer, Indexer.Fetcher.Optimism.Deposit.Supervisor, enabled: ConfigHelper.chain_type() == :optimism
 config :indexer, Indexer.Fetcher.Optimism.Withdrawal.Supervisor, enabled: ConfigHelper.chain_type() == :optimism
 config :indexer, Indexer.Fetcher.Optimism.WithdrawalEvent.Supervisor, enabled: ConfigHelper.chain_type() == :optimism
 
 config :indexer, Indexer.Fetcher.Optimism.EIP1559ConfigUpdate.Supervisor,
-  disabled?: ConfigHelper.chain_type() != :optimism
+  disabled?: ConfigHelper.chain_type() not in [:optimism, :optimism_agglayer]
 
-config :indexer, Indexer.Fetcher.Optimism.Interop.Message.Supervisor, disabled?: ConfigHelper.chain_type() != :optimism
+config :indexer, Indexer.Fetcher.Optimism.Interop.Message.Supervisor, disabled?: ConfigHelper.chain_type() not in [:optimism, :optimism_agglayer]
 
 config :indexer, Indexer.Fetcher.Optimism.Interop.MessageFailed.Supervisor,
-  disabled?: ConfigHelper.chain_type() != :optimism
+  disabled?: ConfigHelper.chain_type() not in [:optimism, :optimism_agglayer]
 
 config :indexer, Indexer.Fetcher.Optimism.Interop.MessageQueue.Supervisor,
-  disabled?: ConfigHelper.chain_type() != :optimism
+  disabled?: ConfigHelper.chain_type() not in [:optimism, :optimism_agglayer]
 
 config :indexer, Indexer.Fetcher.Optimism.Interop.MultichainExport.Supervisor,
   disabled?:
-    ConfigHelper.chain_type() != :optimism ||
+    ConfigHelper.chain_type() not in [:optimism, :optimism_agglayer] ||
       ConfigHelper.parse_bool_env_var("INDEXER_DISABLE_OPTIMISM_INTEROP_MULTICHAIN_EXPORT", "true")
 
 config :indexer, Indexer.Fetcher.Optimism,
@@ -1357,7 +1357,7 @@ config :indexer, Indexer.Fetcher.Optimism.OperatorFee,
   init_limit: ConfigHelper.parse_integer_env_var("INDEXER_OPTIMISM_OPERATOR_FEE_QUEUE_INIT_QUERY_LIMIT", 1_000)
 
 config :indexer, Indexer.Fetcher.Optimism.OperatorFee.Supervisor,
-  disabled?: is_nil(optimism_l2_isthmus_timestamp) or ConfigHelper.chain_type() != :optimism
+  disabled?: is_nil(optimism_l2_isthmus_timestamp) or ConfigHelper.chain_type() not in [:optimism, :optimism_agglayer]
 
 config :indexer, Indexer.Fetcher.Withdrawal.Supervisor,
   disabled?: System.get_env("INDEXER_DISABLE_WITHDRAWALS_FETCHER", "true") == "true"
@@ -1510,10 +1510,10 @@ config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL1,
   rollup_network_id_l1: ConfigHelper.parse_integer_or_nil_env_var("INDEXER_POLYGON_ZKEVM_L1_BRIDGE_NETWORK_ID"),
   rollup_index_l1: ConfigHelper.parse_integer_or_nil_env_var("INDEXER_POLYGON_ZKEVM_L1_BRIDGE_ROLLUP_INDEX")
 
-config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL1.Supervisor, enabled: ConfigHelper.chain_type() == :polygon_zkevm
+config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL1.Supervisor, enabled: ConfigHelper.chain_type() in [:polygon_zkevm, :optimism_agglayer]
 
 config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL1Tokens.Supervisor,
-  enabled: ConfigHelper.chain_type() == :polygon_zkevm
+  enabled: ConfigHelper.chain_type() in [:polygon_zkevm, :optimism_agglayer]
 
 config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL2,
   start_block: System.get_env("INDEXER_POLYGON_ZKEVM_L2_BRIDGE_START_BLOCK"),
@@ -1521,7 +1521,7 @@ config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL2,
   rollup_network_id_l2: ConfigHelper.parse_integer_or_nil_env_var("INDEXER_POLYGON_ZKEVM_L2_BRIDGE_NETWORK_ID"),
   rollup_index_l2: ConfigHelper.parse_integer_or_nil_env_var("INDEXER_POLYGON_ZKEVM_L2_BRIDGE_ROLLUP_INDEX")
 
-config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL2.Supervisor, enabled: ConfigHelper.chain_type() == :polygon_zkevm
+config :indexer, Indexer.Fetcher.PolygonZkevm.BridgeL2.Supervisor, enabled: ConfigHelper.chain_type() in [:polygon_zkevm, :optimism_agglayer]
 
 config :indexer, Indexer.Fetcher.PolygonZkevm.TransactionBatch,
   chunk_size: ConfigHelper.parse_integer_env_var("INDEXER_POLYGON_ZKEVM_BATCHES_CHUNK_SIZE", 20),
