@@ -167,16 +167,43 @@ jobs:
           tags: ${{ steps.version.outputs.image_tags }}
           # CHAIN_TYPE is COMPILE-time in Blockscout, not runtime: api_router.ex
           # resolves @chain_type through Utils.CompileTimeEnvHelper, so the
-          # /api/v2/optimism/* routes are compiled IN or OUT of the release.
+          # /api/v2/* chain-type routes are compiled IN or OUT of the release.
           # Omitting it built every tag we ever published as the "default" chain
-          # type, which is why the explorer's Deposits/Withdrawals tabs return
+          # type, which is why the explorer's Deposits/Withdrawals tabs returned
           # 400 "Unknown API v2 action" on testnet AND mainnet — the chart's
           # runtime CHAIN_TYPE env can never add those routes back.
           # (The runtime env DID drive the Optimism indexers, which are gated in
           # runtime.exs, which is why the op_* tables are already populated.)
-          # Mirrors upstream .github/workflows/release-optimism.yml.
+          #
+          # "optimism_agglayer", not "optimism": our chain is an OP Stack
+          # execution layer bridged by AggLayer, not the OP Portal. The hybrid
+          # type keeps the OP batch / l1_fee / EIP-1559 machinery and swaps the
+          # bridge side over to the Polygon zkEVM fetchers, so it serves
+          # /api/v2/zkevm/deposits + /withdrawals INSTEAD of
+          # /api/v2/optimism/deposits + /withdrawals. Deploying an image built
+          # this way therefore requires, in lockstep:
+          #   * blockscout frontend >= testnet-v1.4.0 with rollupType "aggLayer"
+          #     (an "optimistic" frontend 404s exactly those two tabs), and
+          #   * charts/blockscout gating INDEXER_OPTIMISM_* on BOTH chain types
+          #     — an `eq ... "optimism"` test drops all of them silently.
+          # See tajir-op-infra values/testnet/blockscout.yaml.gotmpl.
+          #
+          # This file is branch-scoped: `pull_request` workflows run from the
+          # BASE branch, so each of devnet / testnet / mainnet builds with its
+          # OWN copy of this value. It reaches a branch only when a promotion
+          # merge carries it there — so mainnet keeps building `optimism` until
+          # testnet is merged into it, which must happen together with the
+          # mainnet-side values (frontend rollupType + the chart's
+          # INDEXER_OPTIMISM_* gate), not before them.
+          #
+          # Because the base branch supplies the workflow, the very first
+          # promotion build after this change can still run the OLD copy. Do not
+          # assume a tag is agglayer because this line says so — verify the
+          # published image before pinning it (the router's compiled routes are
+          # in a zlib-compressed literal chunk, so `strings` alone will not show
+          # them).
           build-args: |
-            CHAIN_TYPE=optimism
+            CHAIN_TYPE=optimism_agglayer
             DECODE_NOT_A_CONTRACT_CALLS=false
             MIXPANEL_URL=
             MIXPANEL_TOKEN=
