@@ -263,7 +263,7 @@ defmodule BlockScoutWeb.Schemas.API.V2.Block.ChainTypeCustomizations do
           }
         )
 
-      :optimism ->
+      chain when chain in [:optimism, :optimism_agglayer] ->
         schema |> Helper.extend_schema(properties: %{optimism: @optimism_schema})
 
       :zksync ->

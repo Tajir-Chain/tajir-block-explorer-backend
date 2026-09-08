@@ -32,6 +32,15 @@ defmodule Indexer.Fetcher.RollupL1ReorgMonitor do
           Indexer.Fetcher.Optimism.WithdrawalEvent
         ]
 
+      :optimism_agglayer ->
+        [
+          Indexer.Fetcher.Optimism.Deposit,
+          Indexer.Fetcher.Optimism.OutputRoot,
+          Indexer.Fetcher.Optimism.TransactionBatch,
+          Indexer.Fetcher.Optimism.WithdrawalEvent,
+          Indexer.Fetcher.PolygonZkevm.BridgeL1
+        ]
+
       :polygon_zkevm ->
         [
           Indexer.Fetcher.PolygonZkevm.BridgeL1
