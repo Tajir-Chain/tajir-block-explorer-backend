@@ -122,7 +122,7 @@ defmodule BlockScoutWeb.Routers.ApiRouter do
 
     get("/smart-contracts/:address_hash_param", V2.ImportController, :try_to_search_contract)
 
-    if @chain_type == :optimism do
+    if @chain_type in [:optimism, :optimism_agglayer] do
       post("/optimism/interop/", V2.OptimismController, :interop_import)
     end
   end
@@ -166,7 +166,7 @@ defmodule BlockScoutWeb.Routers.ApiRouter do
         get("/arbitrum-batch/:batch_number_param", V2.TransactionController, :arbitrum_batch)
       end
 
-      if @chain_type == :optimism do
+      if @chain_type in [:optimism, :optimism_agglayer] do
         get("/optimism-batch/:batch_number_param", V2.TransactionController, :optimism_batch)
       end
 
@@ -219,7 +219,7 @@ defmodule BlockScoutWeb.Routers.ApiRouter do
         get("/arbitrum-batch/:batch_number_param", V2.BlockController, :arbitrum_batch)
       end
 
-      if @chain_type == :optimism do
+      if @chain_type in [:optimism, :optimism_agglayer] do
         get("/optimism-batch/:batch_number_param", V2.BlockController, :optimism_batch)
       end
 
@@ -270,7 +270,7 @@ defmodule BlockScoutWeb.Routers.ApiRouter do
       get("/transactions/watchlist", V2.MainPageController, :watchlist_transactions)
       get("/indexing-status", V2.MainPageController, :indexing_status)
 
-      if @chain_type == :optimism do
+      if @chain_type in [:optimism, :optimism_agglayer] do
         get("/optimism-deposits", V2.OptimismController, :main_page_deposits)
       end
 
@@ -302,7 +302,7 @@ defmodule BlockScoutWeb.Routers.ApiRouter do
       end
     end
 
-    if @chain_type == :optimism do
+    if @chain_type in [:optimism, :optimism_agglayer] do
       scope "/optimism" do
         get("/txn-batches", V2.OptimismController, :transaction_batches)
         get("/txn-batches/count", V2.OptimismController, :transaction_batches_count)
@@ -313,10 +313,12 @@ defmodule BlockScoutWeb.Routers.ApiRouter do
         get("/batches/:number", V2.OptimismController, :batch_by_number)
         get("/output-roots", V2.OptimismController, :output_roots)
         get("/output-roots/count", V2.OptimismController, :output_roots_count)
-        get("/deposits", V2.OptimismController, :deposits)
-        get("/deposits/count", V2.OptimismController, :deposits_count)
-        get("/withdrawals", V2.OptimismController, :withdrawals)
-        get("/withdrawals/count", V2.OptimismController, :withdrawals_count)
+        if @chain_type == :optimism do
+          get("/deposits", V2.OptimismController, :deposits)
+          get("/deposits/count", V2.OptimismController, :deposits_count)
+          get("/withdrawals", V2.OptimismController, :withdrawals)
+          get("/withdrawals/count", V2.OptimismController, :withdrawals_count)
+        end
         get("/games", V2.OptimismController, :games)
         get("/games/count", V2.OptimismController, :games_count)
         get("/interop/messages", V2.OptimismController, :interop_messages)
@@ -365,6 +367,8 @@ defmodule BlockScoutWeb.Routers.ApiRouter do
         get("/batches", V2.PolygonZkevmController, :batches)
         get("/batches/count", V2.PolygonZkevmController, :batches_count)
         get("/batches/:batch_number", V2.PolygonZkevmController, :batch)
+      end
+      if @chain_type in [:polygon_zkevm, :optimism_agglayer] do
         get("/deposits", V2.PolygonZkevmController, :deposits)
         get("/deposits/count", V2.PolygonZkevmController, :deposits_count)
         get("/withdrawals", V2.PolygonZkevmController, :withdrawals)

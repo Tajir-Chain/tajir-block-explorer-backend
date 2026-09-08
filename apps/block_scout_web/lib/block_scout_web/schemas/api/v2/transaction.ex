@@ -176,7 +176,7 @@ defmodule BlockScoutWeb.Schemas.API.V2.Transaction.ChainTypeCustomizations do
       :arbitrum ->
         schema |> Helper.extend_schema(properties: %{arbitrum: @arbitrum_schema})
 
-      :optimism ->
+      chain when chain in [:optimism, :optimism_agglayer] ->
         schema
         |> Helper.extend_schema(
           properties: %{
