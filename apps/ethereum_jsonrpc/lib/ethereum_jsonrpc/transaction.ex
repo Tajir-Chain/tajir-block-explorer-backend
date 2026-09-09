@@ -35,7 +35,7 @@ defmodule EthereumJSONRPC.Transaction do
                            ]
                          )
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       @chain_type_fields quote(
                            do: [
                              l1_transaction_origin: EthereumJSONRPC.hash(),
@@ -140,7 +140,7 @@ defmodule EthereumJSONRPC.Transaction do
        * `"maxFeePerBlobGas"` - `t:EthereumJSONRPC.quantity/0` of wei to denote max fee per unit of blob gas used. Introduced in [EIP-4844](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-4844.md)
        * `"blobVersionedHashes"` - `t:list/0` of `t:EthereumJSONRPC.hash/0` of included data blobs hashes. Introduced in [EIP-4844](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-4844.md)
       """
-    :optimism -> """
+    chain when chain in [:optimism, :optimism_agglayer] -> """
        * `"l1TxOrigin"` - .
        * `"l1BlockNumber"` - .
       """
@@ -552,7 +552,7 @@ defmodule EthereumJSONRPC.Transaction do
           {"maxFeePerBlobGas", :max_fee_per_blob_gas}
         ])
 
-      :optimism ->
+      chain when chain in [:optimism, :optimism_agglayer] ->
         # we need to put blobVersionedHashes for Indexer.Fetcher.Optimism.TransactionBatch module
         put_if_present(params, elixir, [
           {"l1TxOrigin", :l1_transaction_origin},

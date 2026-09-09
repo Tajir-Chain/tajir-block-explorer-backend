@@ -19,7 +19,7 @@ defmodule BlockScoutWeb.RealtimeEventHandlers.Main do
         Subscriber.to(:new_messages_to_arbitrum_amount, :realtime)
       end
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       def chain_type_specific_subscriptions do
         Subscriber.to(:new_optimism_batches, :realtime)
         Subscriber.to(:new_optimism_deposits, :realtime)
