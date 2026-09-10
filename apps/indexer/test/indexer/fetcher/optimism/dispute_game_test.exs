@@ -1,4 +1,4 @@
-if Application.get_env(:explorer, :chain_type) == :optimism do
+if Application.get_env(:explorer, :chain_type) in [:optimism, :optimism_agglayer] do
   defmodule Indexer.Fetcher.Optimism.DisputeGameTest do
     use EthereumJSONRPC.Case, async: false
     use Explorer.DataCase

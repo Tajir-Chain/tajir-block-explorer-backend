@@ -41,7 +41,7 @@ defmodule Explorer.Chain.Block.Schema do
                             2
                           )
 
-                        :optimism ->
+                        chain when chain in [:optimism, :optimism_agglayer] ->
                           elem(
                             quote do
                               has_one(:op_transaction_batch, OptimismTransactionBatch,

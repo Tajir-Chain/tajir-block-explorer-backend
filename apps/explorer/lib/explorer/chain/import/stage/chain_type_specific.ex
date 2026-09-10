@@ -24,6 +24,20 @@ defmodule Explorer.Chain.Import.Stage.ChainTypeSpecific do
       Runner.Optimism.EIP1559ConfigUpdates,
       Runner.Optimism.InteropMessages
     ],
+    optimism_agglayer: [
+      Runner.Optimism.FrameSequences,
+      Runner.Optimism.FrameSequenceBlobs,
+      Runner.Optimism.TransactionBatches,
+      Runner.Optimism.OutputRoots,
+      Runner.Optimism.DisputeGames,
+      Runner.Optimism.Deposits,
+      Runner.Optimism.Withdrawals,
+      Runner.Optimism.WithdrawalEvents,
+      Runner.Optimism.EIP1559ConfigUpdates,
+      Runner.Optimism.InteropMessages,
+      Runner.PolygonZkevm.BridgeL1Tokens,
+      Runner.PolygonZkevm.BridgeOperations
+    ],
     polygon_zkevm: [
       Runner.PolygonZkevm.LifecycleTransactions,
       Runner.PolygonZkevm.TransactionBatches,

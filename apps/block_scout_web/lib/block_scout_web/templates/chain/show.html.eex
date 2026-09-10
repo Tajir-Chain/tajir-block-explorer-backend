@@ -94,7 +94,7 @@
       <!-- Stats -->
       <div class="dashboard-banner-network-plain-container">
         <div class="dashboard-banner-network-stats">
-          <%= unless Application.get_env(:explorer, :chain_type) == :optimism do %>
+          <%= unless Application.get_env(:explorer, :chain_type) in [:optimism, :optimism_agglayer] do %>
             <%= case @average_block_time do %>
               <% {:error, :disabled} -> %>
                 <%= nil %>

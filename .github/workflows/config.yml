@@ -57,6 +57,7 @@ jobs:
               "ethereum",
               "filecoin",
               "optimism",
+              "optimism_agglayer",
               "optimism-celo",
               "polygon_zkevm",
               "rsk",
@@ -74,6 +75,7 @@ jobs:
               "default",
               "ethereum",
               "optimism",
+              "optimism_agglayer",
               "optimism-celo"
             ];
 

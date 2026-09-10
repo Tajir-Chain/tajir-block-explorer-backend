@@ -10,7 +10,7 @@ defmodule BlockScoutWeb.API.V2.OptimismControllerTest do
   setup :set_mox_global
 
   describe "/optimism/interop/messages" do
-    if @chain_type == :optimism do
+    if @chain_type in [:optimism, :optimism_agglayer] do
       test "handles message with 0x prefixed payload", %{conn: conn} do
         insert(:op_interop_message,
           payload: %Data{

@@ -19,7 +19,7 @@ defmodule EthereumJSONRPC.Receipt do
                            ]
                          )
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       @chain_type_fields quote(
                            do: [
                              l1_fee: non_neg_integer(),
@@ -127,7 +127,7 @@ defmodule EthereumJSONRPC.Receipt do
             blob_gas_price: 0,\
             blob_gas_used: 0\
       """
-    :optimism -> """
+    chain when chain in [:optimism, :optimism_agglayer] -> """
           l1_fee: 0,\
           l1_fee_scalar: 0,\
           l1_gas_price: 0,\
@@ -182,7 +182,7 @@ defmodule EthereumJSONRPC.Receipt do
             blob_gas_price: 0,\
             blob_gas_used: 0\
       """
-    :optimism -> """
+    chain when chain in [:optimism, :optimism_agglayer] -> """
           l1_fee: 0,\
           l1_fee_scalar: 0,\
           l1_gas_price: 0,\
@@ -251,7 +251,7 @@ defmodule EthereumJSONRPC.Receipt do
         })
       end
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       defp chain_type_fields(params, elixir) do
         {operator_fee_scalar_default, operator_fee_constant_default} =
           if is_nil(op_isthmus_timestamp()) do

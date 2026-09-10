@@ -16,7 +16,7 @@ defmodule BlockScoutWeb.V2.UserSocket do
 
   case @chain_type do
     :arbitrum -> channel("arbitrum:*", BlockScoutWeb.ArbitrumChannel)
-    :optimism -> channel("optimism:*", BlockScoutWeb.OptimismChannel)
+    chain when chain in [:optimism, :optimism_agglayer] -> channel("optimism:*", BlockScoutWeb.OptimismChannel)
     _ -> nil
   end
 

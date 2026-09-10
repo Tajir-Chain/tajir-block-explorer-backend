@@ -339,6 +339,26 @@ defmodule Indexer.Block.Fetcher do
     )
   end
 
+  defp do_import_options(
+         :optimism_agglayer,
+         basic_import_options,
+         %{
+           optimism_withdrawals: optimism_withdrawals,
+           polygon_zkevm_bridge_operations: polygon_zkevm_bridge_operations
+         } = chain_specific_import_options
+       ) do
+    import_options =
+      basic_import_options
+      |> Map.put_new(:optimism_withdrawals, %{params: optimism_withdrawals})
+      |> Map.put_new(:polygon_zkevm_bridge_operations, %{params: polygon_zkevm_bridge_operations})
+
+    do_chain_identity_import_options(
+      chain_identity(),
+      import_options,
+      chain_specific_import_options
+    )
+  end
+
   defp do_import_options(:polygon_zkevm, basic_import_options, %{
          polygon_zkevm_bridge_operations: polygon_zkevm_bridge_operations
        }) do
