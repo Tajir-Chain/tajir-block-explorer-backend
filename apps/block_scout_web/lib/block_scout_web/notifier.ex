@@ -58,7 +58,7 @@ defmodule BlockScoutWeb.Notifier do
     :arbitrum ->
       @chain_type_specific_events ~w(new_arbitrum_batches new_messages_to_arbitrum_amount)a
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       @chain_type_specific_events ~w(new_optimism_batches new_optimism_deposits)a
 
     _ ->
@@ -426,7 +426,7 @@ defmodule BlockScoutWeb.Notifier do
         # credo:disable-for-next-line Credo.Check.Design.AliasUsage
         do: BlockScoutWeb.Notifiers.Arbitrum.handle_event(event)
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       def handle_event({:chain_event, topic, _, _} = event) when topic in @chain_type_specific_events,
         # credo:disable-for-next-line Credo.Check.Design.AliasUsage
         do: BlockScoutWeb.Notifiers.Optimism.handle_event(event)

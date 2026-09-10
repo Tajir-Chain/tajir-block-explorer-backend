@@ -1,5 +1,6 @@
 defmodule EthereumJSONRPC.ReceiptTest do
   use ExUnit.Case, async: true
+  use Utils.CompileTimeEnvHelper, chain_type: [:explorer, :chain_type]
 
   alias EthereumJSONRPC.Receipt
 
@@ -26,5 +27,32 @@ defmodule EthereumJSONRPC.ReceiptTest do
              "transactionHash" => "0x0",
              "blockNumber" => nil
            }
+  end
+
+  if @chain_type in [:optimism, :optimism_agglayer] do
+    describe "elixir_to_params/1 optimism L1 fee fields" do
+      test "populates l1_fee fields from receipt" do
+        params =
+          %{
+            "transactionHash" => "0x00",
+            "transactionIndex" => "0x0",
+            "blockHash" => "0x00",
+            "blockNumber" => "0x1",
+            "contractAddress" => nil,
+            "cumulativeGasUsed" => "0x1",
+            "gasUsed" => "0x1",
+            "status" => "0x1",
+            "logs" => [],
+            "l1Fee" => "0x64",
+            "l1GasPrice" => "0x2",
+            "l1GasUsed" => "0x32"
+          }
+          |> Receipt.to_elixir()
+          |> Receipt.elixir_to_params()
+          |> Map.take([:l1_fee, :l1_gas_price, :l1_gas_used])
+
+        assert params == %{l1_fee: 100, l1_gas_price: 2, l1_gas_used: 50}
+      end
+    end
   end
 end
