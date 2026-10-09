@@ -27,6 +27,7 @@ defmodule BlockScoutWeb.API.V2.StatsControllerTest do
       assert Map.has_key?(response, "total_transactions")
       assert Map.has_key?(response, "average_block_time")
       assert Map.has_key?(response, "coin_price")
+      assert Map.has_key?(response, "secondary_coin_price_change_percentage")
       assert Map.has_key?(response, "total_gas_used")
       assert Map.has_key?(response, "transactions_today")
       assert Map.has_key?(response, "gas_used_today")
