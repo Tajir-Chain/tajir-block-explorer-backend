@@ -54,7 +54,7 @@ defmodule BlockScoutWeb.Schemas.API.V2.Transaction.Response.ChainTypeCustomizati
   @spec chain_type_fields(map()) :: map()
   def chain_type_fields(schema) do
     case Application.get_env(:explorer, :chain_type) do
-      :optimism ->
+      chain when chain in [:optimism, :optimism_agglayer] ->
         schema
         |> Helper.extend_schema(
           properties: %{op_interop_messages: %Schema{type: :array, items: @op_interop_message_schema, nullable: false}}

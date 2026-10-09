@@ -543,7 +543,7 @@ defmodule BlockScoutWeb.API.V2.TransactionControllerTest do
       end
     end
 
-    if @chain_type == :optimism do
+    if @chain_type in [:optimism, :optimism_agglayer] do
       test "returns transaction with interop message", %{conn: conn} do
         transaction = insert(:transaction)
 

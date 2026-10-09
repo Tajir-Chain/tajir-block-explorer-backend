@@ -30,7 +30,7 @@ defmodule BlockScoutWeb.Schemas.API.V2.Stats.Response.ChainTypeCustomizations do
           }
         )
 
-      :optimism ->
+      chain when chain in [:optimism, :optimism_agglayer] ->
         schema
         |> Helper.extend_schema(
           properties: %{
@@ -105,6 +105,7 @@ defmodule BlockScoutWeb.Schemas.API.V2.Stats.Response do
         network_utilization_percentage: %Schema{type: :number, nullable: true},
         secondary_coin_image: %Schema{type: :string, nullable: true},
         secondary_coin_price: General.FloatStringNullable,
+        secondary_coin_price_change_percentage: %Schema{type: :number, format: :float, nullable: true},
         static_gas_price: General.IntegerStringNullable,
         total_addresses: General.IntegerString,
         total_blocks: General.IntegerString,

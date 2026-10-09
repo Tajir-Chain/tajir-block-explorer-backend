@@ -126,7 +126,7 @@ defmodule BlockScoutWeb.API.V2.BlockView do
         end
       end
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       defp chain_type_fields(result, block, single_block?) do
         if single_block? do
           # credo:disable-for-next-line Credo.Check.Design.AliasUsage

@@ -946,7 +946,8 @@ defmodule BlockScoutWeb.API.V2.TransactionView do
     BlockScoutWeb.API.V2.ArbitrumView.extend_transaction_json_response(result, transaction)
   end
 
-  defp do_with_chain_type_fields(result, :optimism, transaction, true = _single_transaction?, _conn, _watchlist_names) do
+  defp do_with_chain_type_fields(result, chain, transaction, true = _single_transaction?, _conn, _watchlist_names)
+       when chain in [:optimism, :optimism_agglayer] do
     # credo:disable-for-next-line Credo.Check.Design.AliasUsage
     BlockScoutWeb.API.V2.OptimismView.extend_transaction_json_response(result, transaction)
   end

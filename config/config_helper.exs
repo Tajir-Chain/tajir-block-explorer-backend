@@ -16,6 +16,10 @@ defmodule ConfigHelper do
         {:ethereum, nil} => [Explorer.Repo.Beacon],
         {:filecoin, nil} => [Explorer.Repo.Filecoin],
         {:optimism, nil} => [Explorer.Repo.Optimism],
+        {:optimism_agglayer, nil} => [
+          Explorer.Repo.Optimism,
+          Explorer.Repo.PolygonZkevm
+        ],
         {:polygon_zkevm, nil} => [Explorer.Repo.PolygonZkevm],
         {:rsk, nil} => [Explorer.Repo.RSK],
         {:scroll, nil} => [Explorer.Repo.Scroll],
@@ -414,6 +418,7 @@ defmodule ConfigHelper do
     "ethereum" => :ethereum,
     "filecoin" => :filecoin,
     "optimism" => :optimism,
+    "optimism_agglayer" => :optimism_agglayer,
     "polygon_zkevm" => :polygon_zkevm,
     "rsk" => :rsk,
     "scroll" => :scroll,

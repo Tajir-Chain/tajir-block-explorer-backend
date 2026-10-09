@@ -58,7 +58,7 @@ defmodule BlockScoutWeb.API.V2.BlockController do
         :beacon_deposits => :optional
       }
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       if @chain_identity == {:optimism, :celo} do
         @chain_type_transaction_necessity_by_association %{
           [gas_token: reputation_association()] => :optional

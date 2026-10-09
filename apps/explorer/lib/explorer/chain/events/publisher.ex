@@ -15,7 +15,7 @@ defmodule Explorer.Chain.Events.Publisher do
     :arbitrum ->
       @chain_type_specific_allowed_events ~w(new_arbitrum_batches new_messages_to_arbitrum_amount)a
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       @chain_type_specific_allowed_events ~w(new_optimism_batches new_optimism_deposits)a
 
     _ ->

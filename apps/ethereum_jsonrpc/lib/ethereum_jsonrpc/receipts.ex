@@ -107,7 +107,7 @@ defmodule EthereumJSONRPC.Receipts do
             blob_gas_price: 0,\
             blob_gas_used: 0\
       """
-    :optimism -> """
+    chain when chain in [:optimism, :optimism_agglayer] -> """
         l1_fee: 0,\
         l1_fee_scalar: 0,\
         l1_gas_price: 0,\

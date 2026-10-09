@@ -147,7 +147,8 @@ defmodule Explorer.Market.Source.CoinGecko do
          symbol: String.upcase(data["symbol"]),
          fiat_value: Source.to_decimal(market_data["current_price"][config(:currency)]),
          volume_24h: Source.to_decimal(market_data["total_volume"][config(:currency)]),
-         image_url: Source.handle_image_url(data["image"]["small"] || data["image"]["thumb"])
+         image_url: Source.handle_image_url(data["image"]["small"] || data["image"]["thumb"]),
+         price_change_percentage_24h: price_change_percentage_24h(market_data)
        }}
     else
       nil -> {:error, coin_id_not_specified_error}
@@ -259,6 +260,14 @@ defmodule Explorer.Market.Source.CoinGecko do
       nil -> {:error, "#{Source.secondary_coin_string(secondary_coin?)} ID not specified"}
       {:ok, nil} -> {:ok, []}
       {:error, _reason} = error -> error
+    end
+  end
+
+  defp price_change_percentage_24h(market_data) do
+    case get_in(market_data, ["price_change_percentage_24h_in_currency", config(:currency)]) do
+      value when is_float(value) -> value
+      value when is_integer(value) -> value / 1
+      _ -> nil
     end
   end
 

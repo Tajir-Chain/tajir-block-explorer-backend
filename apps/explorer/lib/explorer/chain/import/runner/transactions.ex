@@ -245,7 +245,7 @@ defmodule Explorer.Chain.Import.Runner.Transactions do
         )
       end
 
-    {:optimism, nil} ->
+    identity when identity in [{:optimism, nil}, {:optimism_agglayer, nil}] ->
       defp default_on_conflict do
         from(
           transaction in Transaction,

@@ -104,6 +104,7 @@ defmodule BlockScoutWeb.API.V2.StatsController do
         "coin_price" => exchange_rate.fiat_value,
         "coin_price_change_percentage" => coin_price_change,
         "secondary_coin_price" => secondary_coin_exchange_rate.fiat_value,
+        "secondary_coin_price_change_percentage" => secondary_coin_exchange_rate.price_change_percentage_24h,
         "total_gas_used" => GasUsageSum.total() |> to_string(),
         "transactions_today" => Enum.at(transaction_stats, 0).number_of_transactions |> to_string(),
         "gas_used_today" => Enum.at(transaction_stats, 0).gas_used,
@@ -337,7 +338,7 @@ defmodule BlockScoutWeb.API.V2.StatsController do
         end
       end
 
-    :optimism ->
+    chain when chain in [:optimism, :optimism_agglayer] ->
       defp add_chain_type_fields(response) do
         import Explorer.Chain.Cache.Counters.Optimism.LastOutputRootSizeCount, only: [fetch: 1]
         response |> Map.put("last_output_root_size", fetch(@api_true))

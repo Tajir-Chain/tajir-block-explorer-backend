@@ -42,7 +42,7 @@ defmodule Explorer.Chain.Transaction.Schema do
                             ]
                           end
 
-                        :optimism ->
+                        chain when chain in [:optimism, :optimism_agglayer] ->
                           elem(
                             quote do
                               field(:l1_fee, Wei)
@@ -367,7 +367,7 @@ defmodule Explorer.Chain.Transaction do
                      to_address_hash revert_reason type has_error_in_internal_transactions r s v)a
 
   @chain_type_optional_attrs (case @chain_type do
-                                :optimism ->
+                                chain when chain in [:optimism, :optimism_agglayer] ->
                                   ~w(l1_fee l1_fee_scalar l1_gas_price l1_gas_used l1_transaction_origin l1_block_number operator_fee_scalar operator_fee_constant da_footprint_gas_scalar)a
 
                                 :scroll ->
@@ -2058,7 +2058,7 @@ defmodule Explorer.Chain.Transaction do
     {:maximum, fee_calc(transaction, gas, unit)}
   end
 
-  if @chain_type == :optimism do
+  if @chain_type in [:optimism, :optimism_agglayer] do
     def fee(%Transaction{gas_price: nil, gas_used: _gas_used}, _unit) do
       {:actual, nil}
     end
